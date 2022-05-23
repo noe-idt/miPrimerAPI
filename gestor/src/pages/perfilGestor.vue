@@ -1,0 +1,145 @@
+<template>
+  <div>
+    <div class="q-pa-md q-gutter-sm bg-grey-3 text-weight-medium text-black">
+      <q-btn
+        class="float-right"
+        color="primary"
+        label="Alta de perfil"
+        @click="mostrarFormulario = true"
+      ></q-btn>
+      <h5 class="q-my-none q-mx-lg">Perfiles</h5>
+
+      <div class="q-gutter-sm">
+        <q-breadcrumbs>
+          <q-breadcrumbs-el label="Home" />
+          <q-breadcrumbs-el label="Usuarios" />
+          <q-breadcrumbs-el label="Perfiles" />
+        </q-breadcrumbs>
+      </div>
+    </div>
+  </div>
+  <q-dialog v-model="mostrarFormulario" persistent
+    ><FormularioPerfil @reload="getStatus" />
+  </q-dialog>
+  <tablaPerfiles
+    :columns="columns"
+    :rows="rows"
+    @reload="getStatus"
+    :FormularioEditar="FormularioEditar"
+    :FormularioEliminar="FormularioEliminar"
+    :verDetalle="verDetalle"
+  />
+</template>
+
+<script>
+import { ref } from "vue";
+import tablaPerfiles from "../components/perfiles/tablaPerfiles.vue";
+import { api } from "boot/axios";
+import FormularioPerfil from "../components/perfiles/FormularioPerfil.vue";
+
+import FormularioEditar from "../components/perfiles/FormularioEditarPerfil.vue";
+import FormularioEliminar from "../components/perfiles/FormularioEliminarPerfil.vue";
+import verDetalle from "../components/perfiles/verDetallePerfil.vue";
+
+export default {
+  name: "perfilesView",
+  setup() {
+    return {};
+  },
+  data() {
+    return {
+      rows: [],
+      columns: [
+        {
+          name: "perfil_id",
+          required: true,
+          label: "Id.",
+          align: "left",
+          field: (row) => row.perfil_id,
+          format: (val) => `${val}`,
+          sortable: true,
+          style: "width: 10px",
+          headerStyle: "max-width: 50px",
+        },
+        {
+          name: "clave",
+          label: "CLAVE",
+          field: (row) => row.clave,
+        },
+        {
+          name: "nombre",
+          label: "NOMBRE",
+          field: (row) => row.nombre,
+        },
+        {
+          name: "descripcion",
+          label: "DESCRIPCIÓN",
+          field: (row) => row.descripcion,
+        },
+        {
+          name: "registro",
+          align: "center",
+          label: "REGISTRO",
+          field: (row) => row.registro_fecha + " | " + row.autor,
+          sortable: true,
+        },
+        {
+          name: "actualizacion",
+          label: "ACTUALIZACION",
+          field: (row) => row.actualizacion_fecha + " | " + row.autor_act,
+
+          style: "width: 200px",
+        },
+
+        {
+          name: "status",
+          label: "STATUS",
+          field: "status",
+          sortable: true,
+          style: "width: 150px",
+        },
+      ],
+      mostrarFormulario: ref(false),
+      FormularioEditar: FormularioEditar,
+      FormularioEliminar: FormularioEliminar,
+      verDetalle: verDetalle,
+    };
+  },
+  components: {
+    tablaPerfiles,
+    FormularioPerfil,
+  },
+  computed: {},
+  methods: {
+    async obtenerDatos() {
+      try {
+        const respuesta = await api.get(
+          "http://localhost:8080/api/perfiles/index",
+          {
+            params: {
+              api_key: "7aa8e437-4257-468a-8bd5-aafb9396ab53",
+            },
+          }
+        );
+        console.log("api conectada");
+        this.rows = respuesta.data;
+      } catch (error) {
+        console.log("No se pudo conectar" + error);
+      }
+    },
+    getStatus(instruction) {
+      if (instruction) {
+        console.log("reloading");
+        this.obtenerDatos();
+      }
+    },
+  },
+  created() {
+    this.obtenerDatos();
+    this.getStatus();
+  },
+};
+</script>
+
+<style>
+</style>

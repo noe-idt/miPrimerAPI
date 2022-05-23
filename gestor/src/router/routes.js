@@ -17,6 +17,17 @@ const routes = [
     name: 'Marcas',
     component: () => import('../pages/marcaGestor.vue')
   },
+  { 
+    path: '/perfiles',
+  name: 'Perfiles',
+  component: () => import('../pages/perfilGestor.vue')
+  },
+  { 
+    path: '/perfiles/:id',
+    name: 'Perfil',
+    component: () => import('../components/perfiles/verDetallePerfil.vue')
+  },
+  
 
   // Always leave this as last one,
   // but you can also remove it

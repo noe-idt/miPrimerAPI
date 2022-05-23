@@ -16,6 +16,12 @@
           label="Usuarios"
         />
         <q-route-tab style="border-radius: 30px" to="/marcas" label="Marcas" />
+
+        <q-route-tab
+          style="border-radius: 30px"
+          to="/perfiles"
+          label="Perfiles"
+        />
       </q-tabs>
     </q-header>
 
