@@ -40,19 +40,13 @@
     >
       <template v-slot:body-cell-usuario="props">
         <q-td :props="props">
-          <q-btn
-            flat
-            class="q-pa-xs"
-            icon="menu"
-            @click.stop="modalDetalle = true"
-          >
-          </q-btn>
-        </q-td>
-        <slot>
+          <div>
+            <q-btn @click="modalDetalle = true"> {{ props.row.usuario }}</q-btn>
+          </div>
           <q-dialog v-model="modalDetalle">
-            <component :is="verDetalle" :id="props.key" />
+            <component :is="verDetalle" :id="props.key" @reload="getStatus" />
           </q-dialog>
-        </slot>
+        </q-td>
       </template>
 
       <template v-slot:body-cell-status="props">
@@ -130,7 +124,7 @@ export default {
       search: ref(""),
       FormEditar: ref(false),
       FormEliminar: ref(false),
-      modalDetalle: ref(false),
+      modalDetalle: ref(null),
     };
   },
   methods: {

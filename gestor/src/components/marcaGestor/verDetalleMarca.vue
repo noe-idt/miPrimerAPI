@@ -1,7 +1,7 @@
 <template>
   <q-card class="q-pa-lg" style="width: 550px; max-width: 80vw">
     <header class="text-h6 text-center">
-      {{ usuario }}
+      {{ nombre }}
     </header>
     <q-card class="my-card" flat bordered>
       <q-item>
@@ -10,7 +10,7 @@
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>{{ usuario }}</q-item-label>
+          <q-item-label>{{ nombre }}</q-item-label>
           <q-item-label caption> {{ nombre }} </q-item-label>
         </q-item-section>
       </q-item>
@@ -18,7 +18,7 @@
       <q-separator />
 
       <q-card-section horizontal>
-        <q-card-section> Dirección de correo: {{ correo }} </q-card-section>
+        <q-card-section> Registrada por : {{ autor }} </q-card-section>
 
         <q-separator vertical />
 
@@ -46,16 +46,14 @@ export default {
   name: "Formulario-component",
   setup() {
     const nombre = ref(null);
-    const usuario = ref(null);
-    const correo = ref(null);
+
     const password = ref(null);
     const fecha_reg = ref(null);
     const status = ref(null);
     return {
       step: ref(1),
       nombre,
-      usuario,
-      correo,
+
       password,
       fecha_reg,
       status,
@@ -64,9 +62,9 @@ export default {
   methods: {
     async obtenerDatos() {
       try {
-        const usuario = this.id;
+        const marca = this.id;
         const respuesta = await api.get(
-          `http://localhost:8080/api/usuarios/${usuario}`,
+          `http://localhost:8080/api/marcas/${marca}`,
           {
             params: {
               api_key: "7aa8e437-4257-468a-8bd5-aafb9396ab53",
@@ -74,39 +72,12 @@ export default {
           }
         );
 
-        console.log("Usuario Obtenido");
-        const datosUsuario = respuesta.data[0];
-        this.nombre = datosUsuario.nombre_usuario;
-        this.usuario = datosUsuario.usuario;
-        this.correo = datosUsuario.correo;
-        this.password = datosUsuario.password;
-        this.fecha_reg = datosUsuario.fecha_registro;
-        this.status = datosUsuario.status;
-      } catch (error) {
-        console.log("No se pudo conectar" + error);
-      }
-    },
-    async updateUsuario() {
-      const usuario = this.id;
-      const nuevosDatos = {
-        usuario: this.usuario,
-        nombre_usuario: this.nombre,
-        correo: this.correo,
-        password: this.password,
-      };
-
-      try {
-        const respuesta = await api.post(
-          `http://localhost:8080/api/usuarios/editar/${usuario}`,
-          nuevosDatos,
-          {
-            params: {
-              api_key: "7aa8e437-4257-468a-8bd5-aafb9396ab53",
-            },
-          }
-        );
-        console.log("Editando usuario...");
-        this.rows = respuesta.data;
+        console.log("Marca Obtenido");
+        const datosMarca = respuesta.data[0];
+        this.nombre = datosMarca.nombre;
+        this.fecha_reg = datosMarca.registro_fecha;
+        this.status = datosMarca.status;
+        this.autor = datosMarca.registro_autor_id;
       } catch (error) {
         console.log("No se pudo conectar" + error);
       }

@@ -86,31 +86,6 @@ export default {
         console.log("No se pudo conectar" + error);
       }
     },
-    async updateUsuario() {
-      const usuario = this.id;
-      const nuevosDatos = {
-        usuario: this.usuario,
-        nombre_usuario: this.nombre,
-        correo: this.correo,
-        password: this.password,
-      };
-
-      try {
-        const respuesta = await api.post(
-          `http://localhost:8080/api/usuarios/editar/${usuario}`,
-          nuevosDatos,
-          {
-            params: {
-              api_key: "7aa8e437-4257-468a-8bd5-aafb9396ab53",
-            },
-          }
-        );
-        console.log("Editando usuario...");
-        this.rows = respuesta.data;
-      } catch (error) {
-        console.log("No se pudo conectar" + error);
-      }
-    },
   },
   created() {
     this.obtenerDatos();

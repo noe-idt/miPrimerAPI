@@ -40,19 +40,12 @@
     >
       <template v-slot:body-cell-nombre="props">
         <q-td :props="props">
-          <q-list>
-            <q-item clickable @click="modalDetalle = true">
-              <q-item-section>
-                <q-item-label>
-                  <q-icon name="delete"> </q-icon>Eliminar
-                  {{ this.$route.name.slice(0, -1) }}</q-item-label
-                >
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-td>
-        <q-dialog v-model="modalDetalle">
-          <component :is="verDetalle" :id="props.key" />
+          <a href="" @click.prevent="modalDetalle = true">{{
+            props.row.nombre
+          }}</a></q-td
+        >
+        <q-dialog v-model="modalDetalle" persistent>
+          <component :is="verDetalle" :id="props.key" @reload="getStatus" />
         </q-dialog>
       </template>
 
@@ -74,7 +67,7 @@
           <q-btn-dropdown flat class="q-pa-xs" dropdown-icon="menu">
             <q-list>
               <q-item clickable @click="FormEditar = true">
-                <q-dialog v-model="FormEditar">
+                <q-dialog v-model="FormEditar" persistent>
                   <component
                     :is="FormularioEditar"
                     :id="props.key"
@@ -89,7 +82,7 @@
                 </q-item-section>
               </q-item>
               <q-item clickable @click="FormEliminar = true">
-                <q-dialog v-model="FormEliminar">
+                <q-dialog v-model="FormEliminar" persistent>
                   <component
                     :is="FormularioEliminar"
                     :id="props.key"

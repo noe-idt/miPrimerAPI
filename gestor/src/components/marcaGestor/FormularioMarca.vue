@@ -91,7 +91,7 @@ export default {
       const nuevaMarca = {
         nombre: this.nombre,
         marca_id: nanoid(12),
-        registro_autor_id: 67,
+        registro_autor_id: 1,
       };
       console.log(nuevaMarca);
       try {

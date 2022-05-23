@@ -1,7 +1,7 @@
 <template>
   <q-card class="q-pa-lg" style="width: 550px; max-width: 80vw">
     <header class="text-h6">
-      Editar Usuario
+      Editar Marca
       <q-btn
         :ripple="false"
         icon="close"
@@ -22,7 +22,7 @@
         <q-step :name="1" :done="step > 1" title="">
           <q-input
             outlined
-            v-model="nombre"
+            v-model.trim="nombre"
             label-slot
             lazy-rules
             :rules="[
@@ -79,24 +79,18 @@ export default {
   name: "Formulario-component",
   setup() {
     const nombre = ref(null);
-    const usuario = ref(null);
-    const correo = ref(null);
-    const password = ref(null);
 
     return {
       step: ref(1),
       nombre,
-      usuario,
-      correo,
-      password,
     };
   },
   methods: {
     async obtenerDatos() {
       try {
-        const usuario = this.id;
+        const marca = this.id;
         const respuesta = await api.get(
-          `http://localhost:8080/api/usuarios/${usuario}`,
+          `http://localhost:8080/api/marcas/${marca}`,
           {
             params: {
               api_key: "7aa8e437-4257-468a-8bd5-aafb9396ab53",
@@ -104,28 +98,23 @@ export default {
           }
         );
 
-        console.log("Usuario Obtenido");
-        const datosUsuario = respuesta.data[0];
-        this.nombre = datosUsuario.nombre_usuario;
-        this.usuario = datosUsuario.usuario;
-        this.correo = datosUsuario.correo;
-        this.password = datosUsuario.password;
+        console.log("Marca Obtenida");
+        const datosMarca = respuesta.data[0];
+        this.nombre = datosMarca.nombre;
       } catch (error) {
         console.log("No se pudo conectar" + error);
       }
     },
-    async updateUsuario() {
-      const usuario = this.id;
+    async updateMarca() {
+      const marca = this.id;
       const nuevosDatos = {
-        usuario: this.usuario,
-        nombre_usuario: this.nombre,
-        correo: this.correo,
-        password: this.password,
+        nombre: this.nombre,
+        actualizacion_autor_id: 1,
       };
 
       try {
-        const respuesta = await api.post(
-          `http://localhost:8080/api/usuarios/editar/${usuario}`,
+        await api.post(
+          `http://localhost:8080/api/marcas/editar/${marca}`,
           nuevosDatos,
           {
             params: {
@@ -133,8 +122,7 @@ export default {
             },
           }
         );
-        console.log("Editando usuario...");
-        this.rows = respuesta.data;
+        console.log("Editando marca...");
       } catch (error) {
         console.log("No se pudo conectar" + error);
       }

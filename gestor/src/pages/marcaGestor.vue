@@ -16,7 +16,7 @@
       </div>
     </div>
   </div>
-  <q-dialog v-model="mostrarFormulario"
+  <q-dialog v-model="mostrarFormulario" persistent
     ><FormularioMarca @reload="getStatus" />
   </q-dialog>
   <tablaMarcas
@@ -64,30 +64,20 @@ export default {
           field: (row) => row.nombre,
         },
         {
-          name: "registro_fecha",
+          name: "registro",
           align: "center",
-          label: "FECHA DE REGISTRO",
-          field: "registro_fecha",
+          label: "REGISTRO",
+          field: (row) => row.registro_fecha + " | " + row.autor,
           sortable: true,
         },
         {
-          name: "registro_autor_id",
-          label: "AUTOR",
-          field: "registro_autor_id",
-        },
-        {
-          name: "actualizacion_fecha",
-          label: "FECHA DE ACTUALIZACION",
-          field: "actualizacion_fecha",
+          name: "actualizacion",
+          label: "ACTUALIZACION",
+          field: (row) => row.actualizacion_fecha + " | " + row.autor_act,
+
           style: "width: 200px",
         },
 
-        {
-          name: "actualizacion_autor_id",
-          label: "AUTOR ACTUALIZACION",
-          field: "actualizacion_autor_id",
-          style: "width: 200px",
-        },
         {
           name: "status",
           label: "STATUS",
