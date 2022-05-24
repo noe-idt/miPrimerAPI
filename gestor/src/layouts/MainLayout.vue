@@ -22,6 +22,11 @@
           to="/perfiles"
           label="Perfiles"
         />
+        <q-route-tab
+          style="border-radius: 30px"
+          to="/categorias"
+          label="Categorías"
+        />
       </q-tabs>
     </q-header>
 

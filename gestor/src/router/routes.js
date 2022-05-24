@@ -27,7 +27,11 @@ const routes = [
     name: 'Perfil',
     component: () => import('../components/perfiles/verDetallePerfil.vue')
   },
-  
+  { 
+    path: '/categorias',
+  name: 'Categorias',
+  component: () => import('../pages/categoriaGestor.vue')
+  },
 
   // Always leave this as last one,
   // but you can also remove it

@@ -41,3 +41,11 @@ $router->group(['prefix' => 'api/perfiles'], function () use ($router) {
     $router->post('/editar/{id}', ['uses' => 'PerfilesController@editar']);
     $router->get('/eliminar/{id}', ['uses' =>'PerfilesController@eliminar']);
 });
+
+$router->group(['prefix' => 'api/categorias'], function () use ($router) {
+    $router->get('index', ['uses' => 'CategoriaController@listar']);
+    $router->get('/{id}', ['uses' => 'CategoriaController@obtenerDetalle']);
+    $router->post('/nuevo', ['uses' =>'CategoriaController@agregar']);
+    $router->post('/editar/{id}', ['uses' => 'CategoriaController@editar']);
+    $router->get('/eliminar/{id}', ['uses' =>'CategoriaController@eliminar']);
+});
