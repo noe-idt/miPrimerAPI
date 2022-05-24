@@ -25,8 +25,6 @@
     :columns="columns"
     :rows="rows"
     @reload="getStatus"
-    :FormularioEditar="FormularioEditar"
-    :FormularioEliminar="FormularioEliminar"
     :verDetalle="verDetalle"
   />
 </template>
@@ -37,8 +35,6 @@ import tablaPerfiles from "../components/perfiles/tablaPerfiles.vue";
 import { api } from "boot/axios";
 import FormularioPerfil from "../components/perfiles/FormularioPerfil.vue";
 
-import FormularioEditar from "../components/perfiles/FormularioEditarPerfil.vue";
-import FormularioEliminar from "../components/perfiles/FormularioEliminarPerfil.vue";
 import verDetalle from "../components/perfiles/verDetallePerfil.vue";
 
 export default {
@@ -100,8 +96,7 @@ export default {
         },
       ],
       mostrarFormulario: ref(false),
-      FormularioEditar: FormularioEditar,
-      FormularioEliminar: FormularioEliminar,
+
       verDetalle: verDetalle,
     };
   },

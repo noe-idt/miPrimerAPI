@@ -1,7 +1,7 @@
 <template>
   <q-card class="q-pa-lg" style="max-width: 80vw">
     <header class="text-h6" style="width: 100%">
-      Eliminar Marca
+      Eliminar Perfil
       <q-btn
         :ripple="false"
         icon="close"
@@ -34,7 +34,7 @@
         color="primary"
         label="Sí, deseo eliminar"
         class="float-right q-ml-xs"
-        @click="eliminarMarca()"
+        @click="eliminarPerfil()"
         v-close-popup
       />
       <q-btn
@@ -64,9 +64,9 @@ export default {
   methods: {
     async obtenerDatos() {
       try {
-        const marca = this.id;
+        const perfil = this.id;
         const respuesta = await api.get(
-          `http://localhost:8080/api/marcas/${marca}`,
+          `http://localhost:8080/api/perfiles/${perfil}`,
           {
             params: {
               api_key: "7aa8e437-4257-468a-8bd5-aafb9396ab53",
@@ -74,23 +74,23 @@ export default {
           }
         );
 
-        console.log("marca Obtenido");
-        const datosMarca = respuesta.data[0];
-        this.nombre = datosMarca.nombre;
+        console.log("Perfil obtenido");
+        const datosPerfil = respuesta.data[0];
+        this.nombre = datosPerfil.nombre;
       } catch (error) {
         console.log("No se pudo conectar" + error);
       }
     },
-    async eliminarMarca() {
-      const marca = this.id;
+    async eliminarPerfil() {
+      const perfil = this.id;
       try {
-        await api.get(`http://localhost:8080/api/marcas/eliminar/${marca}`, {
+        await api.get(`http://localhost:8080/api/perfiles/eliminar/${perfil}`, {
           params: {
             api_key: "7aa8e437-4257-468a-8bd5-aafb9396ab53",
           },
         });
 
-        console.log("Eliminando marca...");
+        console.log("Perfil Eliminado");
       } catch (error) {
         console.log("No se pudo conectar" + error);
       }

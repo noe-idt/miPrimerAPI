@@ -30,7 +30,7 @@ class PerfilRepoAction{
     public function edit(Request $request){
         $perfiles = DB::table('sys_perfiles')->where('perfil_id', $request->id)
         ->update([
-             'nombre' => $request->nombre, 'clave' => $request->clave, 'descripcion' => $request->descripcion]);
+             'nombre' => $request->nombre, 'clave' => $request->clave, 'descripcion' => $request->descripcion, 'actualizacion_autor_id' => $request->actualizacion_autor_id]);
         if($perfiles == 1){
             echo "perfil editado exitosamente" ;
         }else{

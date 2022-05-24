@@ -41,14 +41,15 @@
       <template v-slot:body-cell-usuario="props">
         <q-td :props="props">
           <div>
-            <q-btn @click="modalDetalle = true"> {{ props.row.usuario }}</q-btn>
+            <a href="" @click.prevent="modalDetalle == true">
+              {{ props.row.usuario }}
+            </a>
           </div>
-          <q-dialog v-model="modalDetalle">
-            <component :is="verDetalle" :id="props.key" @reload="getStatus" />
-          </q-dialog>
         </q-td>
+        <q-dialog v-model="modalDetalle">
+          <component :is="verDetalle" :id="props.key" @reload="getStatus" />
+        </q-dialog>
       </template>
-
       <template v-slot:body-cell-status="props">
         <q-td :props="props">
           <q-badge
@@ -131,6 +132,9 @@ export default {
     getStatus(instruction) {
       console.log(instruction);
       this.$emit("reload", true);
+    },
+    modalStatus() {
+      this.modalDetalle = true;
     },
   },
   components: {},

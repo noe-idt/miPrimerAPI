@@ -80,16 +80,14 @@ export default {
     columns: {
       type: Array,
     },
-    FormularioEditar: ref(null),
-    FormularioEliminar: ref(null),
+
     verDetalle: ref(null),
   },
   setup() {
     return {
       separator: ref("cell"),
       search: ref(""),
-      FormEditar: ref(false),
-      FormEliminar: ref(false),
+
       modalDetalle: ref(false),
     };
   },

@@ -4,8 +4,8 @@
       <q-btn
         class="float-right"
         color="primary"
-        label="Alta de usuario"
-        @click="mostrarFormulario = true"
+        label="Regresar"
+        to="/perfiles"
       ></q-btn>
       <h5 class="q-my-none q-mx-lg">Detalle de perfil</h5>
 
@@ -18,26 +18,22 @@
       </div>
     </div>
   </div>
-  <q-card class="q-pa-lg" style="width: 550px; max-width: 80vw">
+  <q-card class="q-pa-lg q-ma-lg bg-grey-1">
     <header class="text-h6 text-center">
       {{ nombre }}
     </header>
-    <q-card class="my-card" flat bordered>
+    <q-card class="my-card bg-grey-1" flat bordered>
       <q-item>
-        <q-item-section avatar>
-          <q-avatar> </q-avatar>
-        </q-item-section>
-
         <q-item-section>
           <q-item-label>{{ nombre }}</q-item-label>
-          <q-item-label caption> {{ nombre }} </q-item-label>
+          <q-item-label caption> {{ clave }} </q-item-label>
         </q-item-section>
       </q-item>
 
       <q-separator />
 
       <q-card-section horizontal>
-        <q-card-section> Registrada por : {{ autor }} </q-card-section>
+        <q-card-section> Registrado por : {{ autor }} </q-card-section>
 
         <q-separator vertical />
 
@@ -46,18 +42,54 @@
           Status: {{ status }}
         </q-card-section>
       </q-card-section>
-      <q-btn
-        no-caps
-        color="primary"
-        label="Salir"
-        class="q-ml-sm float-right"
-        v-close-popup
-      />
+
+      <q-card-section horizontal>
+        <q-card-section> Actualizado por : {{ autor_act }} </q-card-section>
+
+        <q-separator vertical />
+
+        <q-card-section class="col-4">
+          Fecha de actualizacion: {{ fecha_actu }} <br />
+        </q-card-section>
+      </q-card-section>
+      <q-btn-dropdown flat class="q-pa-xs" label="Menu" dropdown-icon="menu">
+        <q-list>
+          <q-item clickable @click="FormEditar = true">
+            <q-dialog v-model="FormEditar" persistent>
+              <FormularioEditar
+                :id="this.$route.params.id"
+                @reload="getStatus"
+              />
+            </q-dialog>
+            <q-item-section>
+              <q-item-label>
+                <q-icon name="edit"> </q-icon>
+                Editar Perfil
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item clickable @click="FormEliminar = true">
+            <q-dialog v-model="FormEliminar" persistent>
+              <FormularioEliminar
+                :id="this.$route.params.id"
+                @reload="getStatus"
+              />
+            </q-dialog>
+            <q-item-section>
+              <q-item-label>
+                <q-icon name="delete"> </q-icon>Eliminar Perfil
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
     </q-card>
   </q-card>
 </template>
 
 <script>
+import FormularioEditar from "./FormularioEditarPerfil.vue";
+import FormularioEliminar from "./FormularioEliminarPerfil.vue";
 import { ref } from "vue";
 import { api } from "boot/axios";
 
@@ -65,7 +97,6 @@ export default {
   name: "Formulario-component",
   setup() {
     const nombre = ref(null);
-
     const password = ref(null);
     const fecha_reg = ref(null);
     const status = ref(null);
@@ -76,6 +107,8 @@ export default {
       password,
       fecha_reg,
       status,
+      FormEditar: ref(false),
+      FormEliminar: ref(false),
     };
   },
   methods: {
@@ -105,6 +138,12 @@ export default {
         console.log("No se pudo conectar" + error);
       }
     },
+    getStatus(instruction) {
+      if (instruction) {
+        console.log("reloading");
+        this.obtenerDatos();
+      }
+    },
   },
   created() {
     this.obtenerDatos();
@@ -112,6 +151,7 @@ export default {
   props: {
     id: String,
   },
+  components: { FormularioEliminar, FormularioEditar },
 };
 </script>
 
