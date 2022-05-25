@@ -30,7 +30,7 @@ class CategoriaRepoAction{
     public function edit(Request $request){
         $categorias = DB::table('categorias')->where('categoria_id', $request->id)
         ->update([
-             'nombre' => $request->nombre, 'actualizacion_autor_id' => $request->actualizacion_autor_id]);
+             'nombre' => $request->nombre, 'actualizacion_autor_id' => $request->actualizacion_autor_id, 'actualizacion_fecha' => $request->actualizacion_fecha]);
         if($categorias == 1){
             echo "Categoria editada exitosamente" ;
         }else{

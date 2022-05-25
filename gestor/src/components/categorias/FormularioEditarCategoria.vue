@@ -106,10 +106,13 @@ export default {
       }
     },
     async updateCategoria() {
+      const fecha = new Date().toISOString();
+
       const categoria = this.id;
       const nuevosDatos = {
         nombre: this.nombre,
         actualizacion_autor_id: 1,
+        actualizacion_fecha: fecha,
       };
 
       try {

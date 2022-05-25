@@ -49,3 +49,20 @@ $router->group(['prefix' => 'api/categorias'], function () use ($router) {
     $router->post('/editar/{id}', ['uses' => 'CategoriaController@editar']);
     $router->get('/eliminar/{id}', ['uses' =>'CategoriaController@eliminar']);
 });
+
+$router->group(['prefix' => 'api/tiendas'], function () use ($router) {
+    $router->get('index', ['uses' => 'TiendasController@listar']);
+    $router->get('/{id}', ['uses' => 'TiendasController@obtenerDetalle']);
+    $router->post('/nuevo', ['uses' =>'TiendasController@agregar']);
+    $router->post('/editar/{id}', ['uses' => 'TiendasController@editar']);
+    $router->get('/eliminar/{id}', ['uses' =>'TiendasController@eliminar']);
+});
+
+
+$router->group(['prefix' => 'api/almacenes'], function () use ($router) {
+    $router->get('index', ['uses' => 'AlmacenesController@listar']);
+    $router->get('/{id}', ['uses' => 'AlmacenesController@obtenerDetalle']);
+    $router->post('/nuevo', ['uses' =>'AlmacenesController@agregar']);
+    $router->post('/editar/{id}', ['uses' => 'AlmacenesController@editar']);
+    $router->get('/eliminar/{id}', ['uses' =>'AlmacenesController@eliminar']);
+});

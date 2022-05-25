@@ -27,6 +27,16 @@
           to="/categorias"
           label="Categorías"
         />
+        <q-route-tab
+          style="border-radius: 30px"
+          to="/tiendas"
+          label="Tiendas"
+        />
+        <q-route-tab
+          style="border-radius: 30px"
+          to="/almacenes"
+          label="Almacenes"
+        />
       </q-tabs>
     </q-header>
 
