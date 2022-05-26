@@ -66,3 +66,22 @@ $router->group(['prefix' => 'api/almacenes'], function () use ($router) {
     $router->post('/editar/{id}', ['uses' => 'AlmacenesController@editar']);
     $router->get('/eliminar/{id}', ['uses' =>'AlmacenesController@eliminar']);
 });
+
+
+$router->group(['prefix' => 'api/compras'], function () use ($router) {
+    $router->get('index', ['uses' => 'CompraController@listar']);
+    $router->get('/{id}', ['uses' => 'CompraController@obtenerDetalle']);
+    $router->get('/detalle/{id}', ['uses' => 'CompraController@obtenerDetalleCompra']);
+    $router->post('/nuevo', ['uses' =>'CompraController@agregar']);
+    $router->post('/editar/{id}', ['uses' => 'CompraController@editar']);
+    $router->get('/eliminar/{id}', ['uses' =>'CompraController@eliminar']);
+});
+
+$router->group(['prefix' => 'api/productos'], function () use ($router) {
+    $router->get('index', ['uses' => 'ProductoController@listar']);
+    $router->get('/{id}', ['uses' => 'ProductoController@obtenerDetalle']);
+    $router->post('/nuevo', ['uses' =>'ProductoController@agregar']);
+    $router->post('/editar/{id}', ['uses' => 'ProductoController@editar']);
+    $router->get('/eliminar/{id}', ['uses' =>'ProductoController@eliminar']);
+    $router->get('/buscar/{producto}', ['uses' =>'ProductoController@busqueda']);
+});

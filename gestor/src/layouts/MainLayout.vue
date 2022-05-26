@@ -15,6 +15,11 @@
           to="/usuarios"
           label="Usuarios"
         />
+        <q-route-tab
+          style="border-radius: 30px"
+          to="/productos"
+          label="Productos"
+        />
         <q-route-tab style="border-radius: 30px" to="/marcas" label="Marcas" />
 
         <q-route-tab
@@ -34,8 +39,8 @@
         />
         <q-route-tab
           style="border-radius: 30px"
-          to="/almacenes"
-          label="Almacenes"
+          to="/compras"
+          label="Compras"
         />
       </q-tabs>
     </q-header>

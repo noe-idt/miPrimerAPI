@@ -13,6 +13,11 @@ const routes = [
     component: () => import('../pages/usuarios.vue')
   },
   {
+    path: '/productos',
+    name: 'Productos',
+    component: () => import('../pages/productoGestor.vue')
+  },
+  {
     path: '/marcas',
     name: 'Marcas',
     component: () => import('../pages/marcaGestor.vue')
@@ -53,11 +58,26 @@ const routes = [
     component: () => import('../components/tiendas/FormularioEditarTienda.vue')
   },
   { 
+    path: '/compras/',
+    name: 'Compras',
+    component: () => import('../pages/compraGestor.vue')
+  },
+  { 
+    path: '/compras/nueva',
+    name: 'Alta de Compra',
+    component: () => import('../components/compras/FormularioCompra.vue')
+  },
+  { 
+    path: '/compras/:id',
+    name: 'Compra',
+    component: () => import('../components/compras/VistaDetalle.vue')
+  },
+  /*{ 
     path: '/almacenes',
   name: 'Almacenes',
   component: () => import('../pages/almacenGestor.vue')
   },
-  /*{ 
+  { 
     path: '/almacenes/nuevo',
     name: 'Alta de Almacen',
     component: () => import('../components/almacenes/FormularioAlmacen.vue')
