@@ -6,7 +6,16 @@
         color="primary"
         label="siguiente"
         class="float-right q-ml-xs"
-        :class="step === 3 ? 'hidden' : ''"
+        :class="step === 2 ? 'hidden' : ''"
+      />
+      <q-btn
+        type="submit"
+        color="primary"
+        label="Enviar"
+        class="float-right q-ml-xs"
+        :class="step === 2 ? '' : 'hidden'"
+        @click="comprobarCompra"
+        v-close-popup
       />
       <q-btn
         v-if="step > 1"
@@ -15,20 +24,6 @@
         @click="$refs.stepper.previous()"
         label="Regresar"
         class="q-ml-sm float-right"
-      /><q-btn
-        class="float-right"
-        color="primary"
-        label="Anterior"
-        to="/compras"
-      ></q-btn>
-      <q-btn
-        type="submit"
-        color="primary"
-        label="Enviar"
-        class="float-right q-ml-xs"
-        :class="step === 3 ? '' : 'hidden'"
-        @click="$refs.stepper.next()"
-        v-close-popup
       />
 
       <h5 class="q-my-none q-mx-lg">Alta de Compra</h5>
@@ -45,7 +40,7 @@
   <q-stepper v-model="step" ref="stepper" animated class="q-my-none">
     <q-step :name="1" :done="step > 1" title="Registro de compra">
       <div class="">
-        <q-form @submit="setCompra()" class="q-pa-lg row">
+        <q-form @submit="comprobarCompra()" class="q-pa-lg row">
           <q-input
             outlined
             type="text"
@@ -99,7 +94,7 @@
       </div>
     </q-step>
 
-    <q-step :name="2" :done="step > 1" title="Registro de compra">
+    <q-step :name="2" :done="step > 1" title="Agregar Productos">
       <div class="bg-grey-2" flat>
         <div class="q-pa-md col-lg-4">
           <h6 class="text-grey-9">Detalle de la compra</h6>
@@ -130,18 +125,162 @@
         >
           Agregar producto</q-btn
         >
-        <q-dialog v-model="modalProductos">
-          <AgregarProductos />
+        <q-dialog v-model="modalProductos" persistent>
+          <AgregarProductos @productosCompra="addProductos" />
         </q-dialog>
       </div>
+      <q-markup-table
+        flat
+        dense
+        class="q-mb-md"
+        v-for="producto in listaProductos"
+        :key="producto.producto_id"
+      >
+        <tr>
+          <th class="text-left">Nombre</th>
+          <td class="text-left">{{ producto.nombre }}</td>
+        </tr>
+
+        <tr>
+          <th class="text-left">Importe</th>
+          <td class="text-left">{{ "$" + producto.precio }}</td>
+        </tr>
+
+        <tr>
+          <th class="text-left">Cantidad</th>
+          <td class="text-left">
+            {{ producto.cantidad }}
+          </td>
+        </tr>
+        <tr>
+          <th class="text-left">Subtotal</th>
+          <td class="text-left">
+            {{ "$" + subtotalComputado(producto) + ".00" }}
+          </td>
+        </tr>
+        <tr>
+          <th class="text-left">Total</th>
+          <td class="text-left">
+            {{ "$" + totalComputado(producto) }}
+          </td>
+        </tr>
+        <tr>
+          <th class="text-left"></th>
+          <td class="text-left">
+            <q-btn
+              color="primary"
+              class="q-ma-md float-left"
+              @click="modalEditar(producto)"
+            >
+              Editar Producto
+            </q-btn>
+            <q-btn
+              @click="quitarProducto(producto)"
+              color="primary"
+              class="q-ma-md float-left"
+            >
+              <q-item-section> Eliminar Producto </q-item-section>
+            </q-btn>
+          </td>
+        </tr>
+      </q-markup-table>
     </q-step>
   </q-stepper>
+  <q-dialog v-model="alert">
+    <EditarCantidad
+      :producto="seleccionado"
+      @datosNuevos="modificarProductos"
+    />
+  </q-dialog>
+  <q-dialog v-model="finalStep">
+    <q-card class="q-pa-lg" style="max-width: 80vw">
+      <header style="width: 100%">
+        <q-btn
+          :ripple="false"
+          icon="close"
+          class="float-right"
+          flat
+          v-close-popup
+        ></q-btn>
+
+        <h6 class="q-ma-xs">Resumen de Compra</h6>
+        <q-separator />
+        <p class="text-grey-9">
+          Estás a punto de generar una compra con los siguientes datos
+        </p>
+      </header>
+      <body style="width: 100%">
+        <q-markup-table flat class="q-mb-md">
+          <tr>
+            <th class="text-left">Folio</th>
+            <td class="text-left">{{ folio }}</td>
+          </tr>
+
+          <tr>
+            <th class="text-left">Descripción</th>
+            <td class="text-left">{{ descripcion }}</td>
+          </tr>
+
+          <tr>
+            <th class="text-left">Cantidad de productos</th>
+            <td class="text-left">
+              {{ calcularTotalProductos() }}
+            </td>
+          </tr>
+
+          <tr>
+            <th class="text-left">Total de compra:</th>
+            <td class="text-left">
+              {{ calcularTotal() }}
+            </td>
+          </tr>
+        </q-markup-table>
+        <q-btn
+          color="primary"
+          label="Sí, deseo eliminar"
+          class="float-right q-ml-xs"
+          @click="calcularTotalProductos()"
+          v-close-popup
+        />
+        <q-btn
+          flat
+          no-caps
+          color="primary"
+          label="No, salir de esta ventana"
+          class="q-ml-sm float-right"
+          v-close-popup
+        />
+      </body>
+    </q-card>
+  </q-dialog>
+  <q-dialog v-model="error">
+    <q-card class="" style="max-width: 80vw">
+      <div class="text-h6" style="width: 100%">
+        <q-btn
+          :ripple="false"
+          icon="close"
+          class="float-right"
+          flat
+          v-close-popup
+        ></q-btn>
+        <q-badge
+          class="bg-red-1 text-red-6 q-ma-lg q-pa-md"
+          outline
+          style="width: 90%"
+        >
+          <q-icon name="o_warning_amber" class="q-mr-md" size="30px"></q-icon>
+          <span>La compra debe contener al menos un producto</span>
+        </q-badge>
+      </div>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script>
 import { ref } from "vue";
 import { api } from "boot/axios";
 import AgregarProductos from "./AgregarProductos.vue";
+import EditarCantidad from "./EditarCantidad.vue";
 export default {
   name: "Formulario-component",
   setup() {
@@ -151,6 +290,11 @@ export default {
       descripcion: ref(null),
       fecha_vencimiento: ref(null),
       modalProductos: ref(false),
+      listaProductos: ref([]),
+      seleccionado: ref(null),
+      alert: ref(false),
+      finalStep: ref(false),
+      error: ref(false),
     };
   },
   methods: {
@@ -173,11 +317,73 @@ export default {
         console.log("No se pudo conectar" + error);
       }
     },
+    addProductos(instruction) {
+      this.listaProductos = [];
+      this.listaProductos = instruction;
+    },
+    modificarProductos(nuevosDatos) {
+      const encontrado = this.listaProductos.find(
+        (prod) => prod.producto_id === nuevosDatos.producto_id
+      );
+      if (encontrado === undefined) {
+        //el producto no se encuentra en el array
+      } else {
+        encontrado.cantidad = nuevosDatos.cantidad;
+        encontrado.precio = nuevosDatos.precio;
+      }
+    },
+    totalComputado(producto) {
+      let subtotal = this.subtotalComputado(producto);
+      let total = subtotal + subtotal * 0.16;
+      return total.toFixed(2);
+    },
+    subtotalComputado(producto) {
+      return producto.cantidad * producto.precio;
+    },
+    quitarProducto(producto) {
+      this.listaProductos = this.listaProductos.filter(
+        (busqueda) => busqueda.producto_id != producto.producto_id
+      );
+    },
+    modalEditar(producto) {
+      this.seleccionado = producto;
+      this.alert = true;
+    },
+    comprobarCompra() {
+      console.log("submitted");
+
+      if (this.listaProductos.length == 0) {
+        this.error = true;
+      } else {
+        this.finalStep = true;
+      }
+    },
+    calcularTotal() {
+      let total = 0;
+      let subtotal = 0;
+      let subtotalIva = 0;
+      this.listaProductos.forEach(function (producto) {
+        subtotal = producto.cantidad * producto.precio;
+        subtotalIva = subtotal + subtotal * 0.16;
+        total = total + subtotalIva;
+      });
+
+      return total.toFixed(2);
+    },
+    calcularTotalProductos() {
+      let totalProductos = 0;
+      this.listaProductos.forEach(function (producto) {
+        totalProductos = producto.cantidad + producto.cantidad;
+      });
+
+      return totalProductos;
+    },
   },
   unmounted() {
     this.$emit("reload", true);
   },
-  components: { AgregarProductos },
+  components: { AgregarProductos, EditarCantidad },
+  computed: {},
 };
 </script>
 

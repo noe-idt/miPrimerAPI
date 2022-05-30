@@ -1,5 +1,13 @@
 <template>
   <div class="q-pa-md bg-white">
+    <q-btn
+      :ripple="false"
+      icon="close"
+      class="float-right"
+      flat
+      v-close-popup
+    />
+
     <div class="q-gutter-y-md q-my-md q-mx-xl row">
       <q-input outlined dense debounce="400" v-model="search" class="col-7">
         <template v-slot:append>
@@ -40,7 +48,7 @@
                 flat
                 class="text-primary"
                 label="Seleccionar"
-                @click="agregarProducto"
+                @click="agregarProducto(producto)"
               ></q-btn>
             </td>
           </tr>
@@ -85,14 +93,19 @@ export default {
         console.log("No se pudo conectar" + error);
       }
     },
-    agregarProducto() {
-      const carrito = {
-        nombre: producto.nombre,
-        cantidad: 1,
-        precio: producto.precio,
-      };
-      this.canasta.push(carrito);
-      console.log(canasta);
+    agregarProducto(producto) {
+      const encontrado = this.canasta.find(
+        (prod) => prod.producto_id === producto.producto_id
+      );
+      if (encontrado === undefined) {
+        //el producto no se encuentra en el array
+        producto.cantidad = 1;
+        this.canasta.push(producto);
+      } else {
+        //el producto se encuentra en el array
+        encontrado.cantidad += 1;
+      }
+      this.$emit("productosCompra", this.canasta);
     },
   },
   components: {},
