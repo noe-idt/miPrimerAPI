@@ -40,7 +40,11 @@
   <q-stepper v-model="step" ref="stepper" animated class="q-my-none">
     <q-step :name="1" :done="step > 1" title="Registro de compra">
       <div class="">
-        <q-form @submit="comprobarCompra()" class="q-pa-lg row">
+        <q-form
+          @submit="comprobarCompra()"
+          class="q-pa-lg column"
+          style="max-width: 500px"
+        >
           <q-input
             outlined
             type="text"
@@ -60,7 +64,7 @@
           </q-input>
           <q-input
             outlined
-            type="textarea"
+            type="text"
             v-model="descripcion"
             class="col-5"
             label-slot
@@ -231,22 +235,22 @@
           <tr>
             <th class="text-left">Total de compra:</th>
             <td class="text-left">
-              {{ calcularTotal() }}
+              {{ "$" + calcularTotal() }}
             </td>
           </tr>
         </q-markup-table>
         <q-btn
           color="primary"
-          label="Sí, deseo eliminar"
+          label="Guardar"
           class="float-right q-ml-xs"
-          @click="calcularTotalProductos()"
+          @click="setCompra()"
           v-close-popup
         />
         <q-btn
           flat
           no-caps
           color="primary"
-          label="No, salir de esta ventana"
+          label="Cerrar"
           class="q-ml-sm float-right"
           v-close-popup
         />
@@ -301,8 +305,11 @@ export default {
     async setCompra() {
       const nuevoCompra = {
         factura_folio: this.folio,
+        compra_id: nanoid(12),
+
         descripcion: this.descripcion,
         fecha_vencimiento: this.fecha_vencimientos,
+        productos: this.listaProductos,
       };
       try {
         await api.post("http://localhost:8080/api/compras/nuevo", nuevoCompra, {
